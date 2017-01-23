@@ -1,0 +1,25 @@
+{
+  "name": "crash-bandicoot/yii2-filemanager",
+  "description": "Yii2 FileManager – PHP library for managing files in different storage",
+  "keywords": ["yii", "yii2", "yii 2", "file", "upload", "storage", "s3"],
+  "type": "library",
+  "homepage": "https://github.com/CrashBandicoot/yii2-filemanager",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrii Troshyn",
+      "email": "troshvk@gmail.com",
+      "homepage": "http://xianet.com.ua"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "yiisoft/yii2": "*",
+    "aws/aws-sdk-php": "2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "CrashBandicoot\\filemanager\\": "src/"
+    }
+  }
+}
