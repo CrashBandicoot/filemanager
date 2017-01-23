@@ -63,11 +63,11 @@ class FileManager extends Object
 
         /** @var StorageInterface $storage */
         $storage = StorageRegistry::getInstance($storageName, $this->storage[$storageName]);
-        return $storage->save($this->file, $this->category);
+        return $storage->save($file, $this->category);
     }
 
     public function get($name)
     {
-        return $this->category['webPath'] . $name;
+        return $this->category['webPath'] . substr($name, 0, 2) . '/' . $name;
     }
 }

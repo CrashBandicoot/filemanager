@@ -36,9 +36,7 @@ class StorageRegistry
             throw new InvalidConfigException("Invalid configuration: storage class '{$storageClass}' not exists");
         }
 
-        $params = isset($config['params']) ? $config['params'] : [];
-
-        $storage = new $storageClass($params);
+        $storage = new $storageClass($config);
 
         if (!($storage instanceof StorageInterface)) {
             throw new InvalidConfigException("Invalid configuration: storage class '{$storageClass}' should implement " . StorageInterface::class);

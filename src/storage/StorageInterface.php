@@ -5,5 +5,10 @@ namespace CrashBandicoot\filemanager\storage;
 
 interface StorageInterface
 {
-    public function save($file, $fileConfig):bool;
+    /**
+     * @param $file
+     * @param $fileConfig
+     * @return bool|string
+     */
+    public function save($file, $fileConfig);
 }
