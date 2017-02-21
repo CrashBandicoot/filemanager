@@ -18,33 +18,33 @@ use CrashBandicoot\filemanager\validation\ValidationModel;
  * Yii2 FileManager – PHP component for managing client files.
  *
  * To work with this extension you must add to your config in the components section next values:
-    'fileManager' => [
-        'class' => 'CrashBandicoot\filemanager\FileManager',
-            'storage' => [
-                's3' => [
-                    'class' => 'CrashBandicoot\filemanager\storage\S3Storage',
-                    'key' => 'YOUR S3 AUTH KEY',
-                    'secret' => 'YOUR S3 SECRET',
-                ],
-            'local' => [
-                'class' => 'CrashBandicoot\filemanager\storage\LocalStorage',
-            ],
-        ],
-        'categories' => [
-            'boat' => [
-                'storage' => 'local',
-                'path' => 'path_to_save_files',
-                'webPath' => 'directory_available_from_web'
-            ],
-            'default' => [
-                'storage' => 's3',
-                'bucket' => 'YOUR_BUCKET_NAME',
-                'region' => 'YOUR_REGION (for example "eu-central-1")',
-                'path' => 'DIRECTORY_TO_SAVE_FILES',
-                'webPath' => 's3 url to access your files from web (example "https://s3.YOUR_REGION.amazonaws.com/YOUR_BUCKET_NAME/DIRECTORY_TO_SAVE_FILES")'
-            ],
-        ],
-    ],
+ *    'fileManager' => [
+ *        'class' => 'CrashBandicoot\filemanager\FileManager',
+ *            'storage' => [
+ *                's3' => [
+ *                    'class' => 'CrashBandicoot\filemanager\storage\S3Storage',
+ *                    'key' => 'YOUR S3 AUTH KEY',
+ *                    'secret' => 'YOUR S3 SECRET',
+ *                ],
+ *            'local' => [
+ *                'class' => 'CrashBandicoot\filemanager\storage\LocalStorage',
+ *            ],
+ *        ],
+ *        'categories' => [
+ *            'boat' => [
+ *                'storage' => 'local',
+ *                'path' => 'path_to_save_files',
+ *                'webPath' => 'directory_available_from_web'
+ *            ],
+ *            'default' => [
+ *                'storage' => 's3',
+ *                'bucket' => 'YOUR_BUCKET_NAME',
+ *                'region' => 'YOUR_REGION (for example "eu-central-1")',
+ *                'path' => 'DIRECTORY_TO_SAVE_FILES',
+ *                'webPath' => 's3 url to access your files from web (example "https://s3.YOUR_REGION.amazonaws.com/YOUR_BUCKET_NAME/DIRECTORY_TO_SAVE_FILES")'
+ *            ],
+ *        ],
+ *    ],
  *
  * @package CrashBandicoot/filemanager
  *
