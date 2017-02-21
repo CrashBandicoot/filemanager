@@ -11,9 +11,40 @@ use CrashBandicoot\filemanager\storage\{
     StorageInterface
 };
 
+use CrashBandicoot\filemanager\validation\ValidationModel;
+
 
 /**
  * Yii2 FileManager – PHP component for managing client files.
+ *
+ * To work with this extension you must add to your config in the components section next values:
+    'fileManager' => [
+        'class' => 'CrashBandicoot\filemanager\FileManager',
+            'storage' => [
+                's3' => [
+                    'class' => 'CrashBandicoot\filemanager\storage\S3Storage',
+                    'key' => 'YOUR S3 AUTH KEY',
+                    'secret' => 'YOUR S3 SECRET',
+                ],
+            'local' => [
+                'class' => 'CrashBandicoot\filemanager\storage\LocalStorage',
+            ],
+        ],
+        'categories' => [
+            'boat' => [
+                'storage' => 'local',
+                'path' => 'path_to_save_files',
+                'webPath' => 'directory_available_from_web'
+            ],
+            'default' => [
+                'storage' => 's3',
+                'bucket' => 'YOUR_BUCKET_NAME',
+                'region' => 'YOUR_REGION (for example "eu-central-1")',
+                'path' => 'DIRECTORY_TO_SAVE_FILES',
+                'webPath' => 's3 url to access your files from web (example "https://s3.YOUR_REGION.amazonaws.com/YOUR_BUCKET_NAME/DIRECTORY_TO_SAVE_FILES")'
+            ],
+        ],
+    ],
  *
  * @package CrashBandicoot/filemanager
  *
@@ -47,13 +78,25 @@ class FileManager extends Object
         }
     }
 
-    public function upload($file)
+    public function upload($files, $validation = [])
     {
-        if (!is_file($file) || !file_exists($file)) {
-            throw new InvalidConfigException("Invalid configuration: file not set or not exists");
+        $validationModel = \Yii::createObject([
+            'class' => ValidationModel::className(),
+            'config' => $validation,
+            'filesArrName' => $files,
+        ]);
+
+        $uploads = $validationModel->check();
+
+        if (is_array($uploads) && array_key_exists('files', $uploads)){
+            return $uploads;
         }
+
         if ($this->category == null) {
-            throw new InvalidConfigException("Invalid configuration: category not set");
+            if (!array_key_exists('default', $this->categories)){
+                throw new InvalidConfigException("Invalid configuration: category not set");
+            }
+            $this->category = $this->categories['default'];
         }
 
         $storageName = $this->category['storage'];
@@ -63,11 +106,26 @@ class FileManager extends Object
 
         /** @var StorageInterface $storage */
         $storage = StorageRegistry::getInstance($storageName, $this->storage[$storageName]);
-        return $storage->save($file, $this->category);
+
+        $uploads = is_array($uploads) ? $uploads : [$uploads];
+
+        $result = [];
+        foreach ($uploads as $upload){
+            $result[] = $storage->save($upload, $this->category);
+        }
+
+        return $result;
     }
 
     public function get($name)
     {
+        if ($this->category == null) {
+            if (!array_key_exists('default', $this->categories)){
+                throw new InvalidConfigException("Invalid configuration: category not set");
+            }
+            $this->category = $this->categories['default'];
+        }
+
         return $this->category['webPath'] . substr($name, 0, 2) . '/' . $name;
     }
 }

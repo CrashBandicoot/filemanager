@@ -7,16 +7,10 @@ class BaseStorage
 {
     protected function generateName($source, $hash = false)
     {
-        $sourceParts = explode("/", $source);
-        $filename = array_pop($sourceParts);
-
         if (!$hash) {
-            return $filename;
+            return $source;
         }
 
-        $filenameParts = explode(".", $filename);
-        $extension = array_pop($filenameParts);
-
-        return sha1($filename . time()) . "." . $extension;
+        return sha1($source . time());
     }
 }
