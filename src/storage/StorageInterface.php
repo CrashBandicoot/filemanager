@@ -2,6 +2,7 @@
 
 namespace CrashBandicoot\filemanager\storage;
 
+use yii\web\UploadedFile;
 
 interface StorageInterface
 {
@@ -10,5 +11,5 @@ interface StorageInterface
      * @param $fileConfig
      * @return bool|string
      */
-    public function save($file, $fileConfig);
+    public function save(UploadedFile $file, $fileConfig);
 }
