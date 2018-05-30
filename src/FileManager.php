@@ -61,7 +61,7 @@ class FileManager extends Object
 
     public function __construct($config = [])
     {
-        if (isset($config['categories']) && !isset($config['categories']['default']['path'])) {
+        if (isset($config['categories']) && !isset($config['categories']['default'])) {
             throw new InvalidConfigException('Default category should be set');
         }
 
@@ -70,29 +70,22 @@ class FileManager extends Object
 
     public function __call($name, $arguments)
     {
-        if (isset($this->categories[$name])) {
-            $this->category = $this->categories[$name];
+        $this->setCategory($name);
 
-            $storageName = $this->category['storage'];
-            if (!isset($this->storage[$storageName])) {
-                throw new InvalidConfigException("Invalid configuration: storage '{$storageName}' not exists. Check your config file");
-            }
-
-            if (!$this->category['path'] || is_dir($this->category['path'])) {
-                throw new InvalidConfigException('Invalid configuration: category path empty or path not exists');
-            }
-
-            return $this;
-        } else {
-            return $this->default();
-        }
+        return $this;
     }
 
     public function upload($files, $validation = [])
     {
         $storage = $this->getStorage();
 
-        $uploads = $this->prepareUploadsFromFiles($files, $validation);
+        $validationModel = \Yii::createObject([
+            'class' => ValidationModel::className(),
+            'config' => $validation,
+            'filesArrName' => $files,
+        ]);
+
+        $uploads = $validationModel->check();
 
         if (is_array($uploads) && array_key_exists('files', $uploads)){
             return $uploads;
@@ -152,16 +145,21 @@ class FileManager extends Object
         return StorageRegistry::getInstance($storageName, $this->storage[$storageName]);
     }
 
-    private function prepareUploadsFromFiles($files, $validation)
+    public function setCategory($name)
     {
-        $validationModel = \Yii::createObject([
-            'class' => ValidationModel::className(),
-            'config' => $validation,
-            'filesArrName' => $files,
-        ]);
+        if (isset($this->categories[$name])) {
+            $this->category = $this->categories[$name];
 
-        $uploads = $validationModel->check();
+            $storageName = $this->category['storage'];
+            if (!isset($this->storage[$storageName])) {
+                throw new InvalidConfigException("Invalid configuration: storage '{$storageName}' not exists. Check your config file");
+            }
 
-        return $uploads;
+            if (!$this->category['path'] || is_dir($this->category['path'])) {
+                throw new InvalidConfigException('Invalid configuration: category path empty or path not exists');
+            }
+        } else {
+            $this->category = $this->categories['default'];
+        }
     }
 }
