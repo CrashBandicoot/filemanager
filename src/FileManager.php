@@ -3,7 +3,7 @@
 namespace CrashBandicoot\filemanager;
 
 use yii\base\{
-    Object,
+    BaseObject,
     InvalidConfigException
 };
 use CrashBandicoot\filemanager\storage\{
@@ -50,7 +50,7 @@ use CrashBandicoot\filemanager\validation\ValidationModel;
  *
  * @method bool default() Default save method
  */
-class FileManager extends Object
+class FileManager extends BaseObject
 {
 
     protected $category = null;
